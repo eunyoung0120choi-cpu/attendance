@@ -20,7 +20,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f5f5f5;min-height:100vh;d
 .btn-lock{height:36px;padding:0 .85rem;border-radius:8px;background:transparent;color:#6b7280;border:1px solid #d1d5db;font-size:13px;font-family:inherit;cursor:pointer}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem}
 .stat-card{background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.07);padding:1rem;text-align:center}
-.stat-num{font-size:26px;font-weight:700;color:#111827;margin-bottom:.2rem}
+.stat-num{font-size:26px;font-weight:700;margin-bottom:.2rem}
 .stat-label{font-size:12px;color:#6b7280}
 .stat-card.blue .stat-num{color:#2563eb}
 .stat-card.green .stat-num{color:#16a34a}
@@ -32,19 +32,30 @@ input[type=text],input[type=tel],input[type=password]{width:100%;height:44px;bor
 input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.15)}
 .btn-primary{width:100%;height:50px;border-radius:12px;background:#3b82f6;color:#fff;border:none;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;transition:.15s}
 .btn-primary:active{transform:scale(.98)}
-.btn-danger{height:36px;padding:0 1rem;border-radius:8px;background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;font-size:13px;font-family:inherit;cursor:pointer;transition:.15s}
+.btn-danger{height:36px;padding:0 1rem;border-radius:8px;background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;font-size:13px;font-family:inherit;cursor:pointer}
 .btn-danger:hover{background:#fee2e2}
-.btn-gray{height:40px;padding:0 1rem;border-radius:8px;background:#f3f4f6;color:#374151;border:1px solid #d1d5db;font-size:13px;font-family:inherit;cursor:pointer;transition:.15s}
+.btn-gray{height:40px;padding:0 1rem;border-radius:8px;background:#f3f4f6;color:#374151;border:1px solid #d1d5db;font-size:13px;font-family:inherit;cursor:pointer}
 .btn-gray:hover{background:#e5e7eb}
-.btn-green2{height:40px;padding:0 1rem;border-radius:8px;background:#f0fdf4;color:#15803d;border:1px solid #86efac;font-size:13px;font-family:inherit;cursor:pointer;transition:.15s}
+.btn-green2{height:40px;padding:0 1rem;border-radius:8px;background:#f0fdf4;color:#15803d;border:1px solid #86efac;font-size:13px;font-family:inherit;cursor:pointer}
 .btn-green2:hover{background:#dcfce7}
-.csv-area{background:#f9fafb;border:1.5px dashed #d1d5db;border-radius:10px;padding:1.25rem;text-align:center;cursor:pointer;transition:.15s;margin-bottom:.85rem}
+.btn-active{height:36px;padding:0 1rem;border-radius:8px;background:#3b82f6;color:#fff;border:none;font-size:13px;font-family:inherit;cursor:pointer}
+.btn-active.on{background:#16a34a}
+/* 교육 목록 */
+.session-list{display:flex;flex-direction:column;gap:8px}
+.session-item{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1rem;border-radius:10px;border:1px solid #e5e7eb;background:#f9fafb;cursor:pointer;transition:.15s}
+.session-item.active{background:#eff6ff;border-color:#93c5fd}
+.session-item:hover{background:#f3f4f6}
+.session-left{display:flex;flex-direction:column;gap:3px}
+.session-name{font-size:15px;font-weight:500;color:#111827}
+.session-date{font-size:12px;color:#6b7280}
+.session-right{display:flex;align-items:center;gap:8px}
+.badge-active{font-size:11px;font-weight:600;background:#dbeafe;color:#1d4ed8;padding:2px 8px;border-radius:20px}
+.badge-inactive{font-size:11px;color:#9ca3af;padding:2px 8px}
+/* CSV */
+.csv-area{background:#f9fafb;border:1.5px dashed #d1d5db;border-radius:10px;padding:1.1rem;text-align:center;cursor:pointer;transition:.15s;margin-bottom:.85rem}
 .csv-area:hover{border-color:#3b82f6;background:#eff6ff}
-.csv-area-icon{font-size:28px;margin-bottom:.4rem}
-.csv-area-text{font-size:14px;color:#6b7280}
-.csv-area-sub{font-size:12px;color:#9ca3af;margin-top:.2rem}
 .csv-btns{display:flex;gap:8px}
-.list-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem}
+/* 명단 */
 .member-list{display:flex;flex-direction:column;gap:8px}
 .member-item{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px}
 .member-info{display:flex;flex-direction:column;gap:2px}
@@ -62,8 +73,8 @@ input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{border-c
 .spinner{width:20px;height:20px;border:2.5px solid #e5e7eb;border-top-color:#3b82f6;border-radius:50%;animation:spin .7s linear infinite}
 .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(60px);background:#1f2937;color:#fff;padding:.65rem 1.25rem;border-radius:10px;font-size:14px;opacity:0;transition:.3s;white-space:nowrap;pointer-events:none;z-index:999}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.divider{border:none;border-top:1px solid #f3f4f6;margin:.85rem 0}
 @keyframes spin{to{transform:rotate(360deg)}}
-@keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
 <body>
@@ -86,46 +97,79 @@ input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{border-c
       <button class="btn-lock" onclick="lockAdmin()">🔒 잠금</button>
     </div>
 
-    <div class="stats">
-      <div class="stat-card blue"><div class="stat-num" id="statTotal">0</div><div class="stat-label">전체</div></div>
-      <div class="stat-card green"><div class="stat-num" id="statDone">0</div><div class="stat-label">출석</div></div>
-      <div class="stat-card gray"><div class="stat-num" id="statAbsent">0</div><div class="stat-label">미출석</div></div>
-    </div>
-
+    <!-- 교육 목록 -->
     <div class="card">
-      <div class="section-title">CSV 일괄 등록</div>
-      <div class="csv-area" onclick="document.getElementById('csvFile').click()">
-        <div class="csv-area-icon">📂</div>
-        <div class="csv-area-text">CSV 파일을 클릭해서 선택하세요</div>
-        <div class="csv-area-sub">이름, 핸드폰번호 형식</div>
+      <div class="section-title">교육 목록</div>
+      <div class="session-list" id="sessionList">
+        <div class="empty-state">등록된 교육이 없습니다.</div>
       </div>
-      <input type="file" id="csvFile" accept=".csv" style="display:none" onchange="handleCsv(this)"/>
-      <div class="csv-btns">
-        <button class="btn-gray" style="flex:1" onclick="downloadTemplate()">📥 양식 다운로드</button>
-        <button class="btn-green2" style="flex:1" onclick="downloadResult()">📤 출석 결과 내보내기</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="section-title">개별 등록</div>
+      <hr class="divider"/>
+      <div class="section-title" style="margin-bottom:.5rem">새 교육 만들기</div>
       <div class="field-row">
-        <label class="field-label">이름</label>
-        <input type="text" id="newName" placeholder="홍길동" maxlength="20"/>
+        <label class="field-label">교육명</label>
+        <input type="text" id="sessionName" placeholder="대리 승진자 교육" maxlength="30"/>
       </div>
-      <div class="field-row">
-        <label class="field-label">핸드폰 번호</label>
-        <input type="tel" id="newPhone" placeholder="010-1234-5678" maxlength="13"/>
-      </div>
-      <button class="btn-primary" style="margin-top:.25rem" onclick="addMember()">등록하기</button>
+      <button class="btn-primary" onclick="createSession()">교육 만들기</button>
     </div>
 
-    <div class="card">
-      <div class="list-header">
-        <div class="section-title" style="margin-bottom:0">교육생 명단</div>
-        <button class="btn-danger" onclick="resetAllAttendance()">출석 초기화</button>
+    <!-- 선택된 교육 -->
+    <div id="selectedPanel" style="display:none">
+
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
+          <div>
+            <div style="font-size:17px;font-weight:700;color:#111827" id="selectedName"></div>
+            <div style="font-size:12px;color:#6b7280;margin-top:2px" id="selectedDate"></div>
+          </div>
+          <button class="btn-active" id="activateBtn" onclick="toggleActive()"></button>
+        </div>
       </div>
-      <div class="loader" id="listLoader"><div class="spinner"></div><span>불러오는 중...</span></div>
-      <div class="member-list" id="memberList"></div>
+
+      <div class="stats">
+        <div class="stat-card blue"><div class="stat-num" id="statTotal">0</div><div class="stat-label">전체</div></div>
+        <div class="stat-card green"><div class="stat-num" id="statDone">0</div><div class="stat-label">출석</div></div>
+        <div class="stat-card gray"><div class="stat-num" id="statAbsent">0</div><div class="stat-label">미출석</div></div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">CSV 일괄 등록</div>
+        <div class="csv-area" onclick="document.getElementById('csvFile').click()">
+          <div style="font-size:24px;margin-bottom:.3rem">📂</div>
+          <div style="font-size:14px;color:#6b7280">CSV 파일 클릭해서 선택</div>
+          <div style="font-size:12px;color:#9ca3af;margin-top:.2rem">이름, 핸드폰번호 형식</div>
+        </div>
+        <input type="file" id="csvFile" accept=".csv" style="display:none" onchange="handleCsv(this)"/>
+        <div class="csv-btns">
+          <button class="btn-gray" style="flex:1" onclick="downloadTemplate()">📥 양식 다운로드</button>
+          <button class="btn-green2" style="flex:1" onclick="downloadResult()">📤 결과 내보내기</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">개별 등록</div>
+        <div class="field-row">
+          <label class="field-label">이름</label>
+          <input type="text" id="newName" placeholder="홍길동" maxlength="20"/>
+        </div>
+        <div class="field-row">
+          <label class="field-label">핸드폰 번호</label>
+          <input type="tel" id="newPhone" placeholder="010-1234-5678" maxlength="13"/>
+        </div>
+        <button class="btn-primary" style="margin-top:.25rem" onclick="addMember()">등록하기</button>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem">
+          <div class="section-title" style="margin-bottom:0">교육생 명단</div>
+          <div style="display:flex;gap:8px">
+            <button class="btn-danger" onclick="resetAllAttendance()">출석 초기화</button>
+            <button class="btn-danger" onclick="deleteSession()">교육 삭제</button>
+          </div>
+        </div>
+        <div class="loader" id="listLoader"><div class="spinner"></div><span>불러오는 중...</span></div>
+        <div class="member-list" id="memberList"></div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -134,7 +178,7 @@ input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{border-c
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc, doc, updateDoc, deleteDoc, onSnapshot, orderBy, query } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, doc, updateDoc, deleteDoc, onSnapshot, orderBy, query, writeBatch, getDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBKhTkI0yNVBAScE_Tqx2laMJKNVsc172s",
@@ -148,15 +192,19 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const ADMIN_PW = '1234';
-let unsubscribe = null;
-let currentMembers = [];
 
+let sessions = [];
+let currentSessionId = null;
+let currentMembers = [];
+let memberUnsub = null;
+
+/* ── 비밀번호 ── */
 window.checkPw = function() {
   const val = document.getElementById('pwInput').value;
   if (val === ADMIN_PW) {
     document.getElementById('lockScreen').style.display = 'none';
     document.getElementById('adminContent').style.display = 'block';
-    startListen();
+    loadSessions();
   } else {
     document.getElementById('pwError').textContent = '비밀번호가 올바르지 않습니다.';
     document.getElementById('pwInput').value = '';
@@ -164,17 +212,108 @@ window.checkPw = function() {
 };
 
 window.lockAdmin = function() {
-  if (unsubscribe) { unsubscribe(); unsubscribe = null; }
+  if (memberUnsub) { memberUnsub(); memberUnsub = null; }
   document.getElementById('adminContent').style.display = 'none';
   document.getElementById('lockScreen').style.display = 'block';
   document.getElementById('pwInput').value = '';
   document.getElementById('pwError').textContent = '';
 };
 
-function startListen() {
+/* ── 교육 목록 로드 ── */
+async function loadSessions() {
+  const snap = await getDocs(query(collection(db, 'sessions'), orderBy('createdAt', 'desc')));
+  sessions = [];
+  snap.forEach(d => sessions.push({ id: d.id, ...d.data() }));
+  renderSessions();
+}
+
+function renderSessions() {
+  const list = document.getElementById('sessionList');
+  if (!sessions.length) {
+    list.innerHTML = '<div class="empty-state">등록된 교육이 없습니다.</div>';
+    return;
+  }
+  list.innerHTML = sessions.map(s => `
+    <div class="session-item ${s.id === currentSessionId ? 'active' : ''}" onclick="selectSession('${s.id}')">
+      <div class="session-left">
+        <div class="session-name">${s.name}</div>
+        <div class="session-date">${new Date(s.createdAt).toLocaleDateString('ko-KR')}</div>
+      </div>
+      <div class="session-right">
+        ${s.isActive ? '<span class="badge-active">진행중</span>' : '<span class="badge-inactive">대기</span>'}
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ── 교육 선택 ── */
+window.selectSession = function(id) {
+  if (memberUnsub) { memberUnsub(); memberUnsub = null; }
+  currentSessionId = id;
+  const s = sessions.find(x => x.id === id);
+  document.getElementById('selectedPanel').style.display = 'block';
+  document.getElementById('selectedName').textContent = s.name;
+  document.getElementById('selectedDate').textContent = new Date(s.createdAt).toLocaleDateString('ko-KR') + ' 생성';
+  const btn = document.getElementById('activateBtn');
+  btn.textContent = s.isActive ? '✓ 진행중' : '활성화';
+  btn.className = s.isActive ? 'btn-active on' : 'btn-active';
+  renderSessions();
+  listenMembers();
+};
+
+/* ── 교육 활성화 토글 ── */
+window.toggleActive = async function() {
+  const s = sessions.find(x => x.id === currentSessionId);
+  if (!s) return;
+  if (!s.isActive) {
+    // 기존 활성 교육 비활성화
+    const batch = writeBatch(db);
+    sessions.filter(x => x.isActive).forEach(x => batch.update(doc(db, 'sessions', x.id), { isActive: false }));
+    batch.update(doc(db, 'sessions', currentSessionId), { isActive: true });
+    await batch.commit();
+  } else {
+    await updateDoc(doc(db, 'sessions', currentSessionId), { isActive: false });
+  }
+  await loadSessions();
+  selectSession(currentSessionId);
+  showToast(s.isActive ? '비활성화되었습니다' : '활성화되었습니다! 교육생 앱에 반영됩니다');
+};
+
+/* ── 교육 만들기 ── */
+window.createSession = async function() {
+  const name = document.getElementById('sessionName').value.trim();
+  if (!name) { showToast('교육명을 입력해주세요'); return; }
+  try {
+    const ref = await addDoc(collection(db, 'sessions'), { name, isActive: false, createdAt: new Date().toISOString() });
+    document.getElementById('sessionName').value = '';
+    await loadSessions();
+    selectSession(ref.id);
+    showToast(name + ' 교육이 만들어졌습니다');
+  } catch(e) { showToast('오류: ' + e.message); }
+};
+
+/* ── 교육 삭제 ── */
+window.deleteSession = async function() {
+  const s = sessions.find(x => x.id === currentSessionId);
+  if (!confirm(s.name + ' 교육을 삭제하시겠습니까? 명단도 모두 삭제됩니다.')) return;
+  try {
+    const snap = await getDocs(collection(db, 'sessions', currentSessionId, 'members'));
+    const batch = writeBatch(db);
+    snap.forEach(d => batch.delete(d.ref));
+    batch.delete(doc(db, 'sessions', currentSessionId));
+    await batch.commit();
+    currentSessionId = null;
+    document.getElementById('selectedPanel').style.display = 'none';
+    await loadSessions();
+    showToast('삭제되었습니다');
+  } catch(e) { showToast('오류: ' + e.message); }
+};
+
+/* ── 명단 실시간 구독 ── */
+function listenMembers() {
   document.getElementById('listLoader').classList.add('show');
-  const q = query(collection(db, 'members'), orderBy('createdAt', 'asc'));
-  unsubscribe = onSnapshot(q, snap => {
+  const q = query(collection(db, 'sessions', currentSessionId, 'members'), orderBy('createdAt', 'asc'));
+  memberUnsub = onSnapshot(q, snap => {
     document.getElementById('listLoader').classList.remove('show');
     currentMembers = [];
     snap.forEach(d => currentMembers.push({ id: d.id, ...d.data() }));
@@ -196,7 +335,7 @@ function updateStats(members) {
 function renderList(members) {
   const list = document.getElementById('memberList');
   if (!members.length) {
-    list.innerHTML = '<div class="empty-state">등록된 교육생이 없습니다.<br>위에서 추가해보세요.</div>';
+    list.innerHTML = '<div class="empty-state">등록된 교육생이 없습니다.</div>';
     return;
   }
   list.innerHTML = members.map(m => {
@@ -215,7 +354,9 @@ function renderList(members) {
   }).join('');
 }
 
+/* ── 교육생 추가 ── */
 window.addMember = async function() {
+  if (!currentSessionId) { showToast('교육을 먼저 선택해주세요'); return; }
   const name = document.getElementById('newName').value.trim();
   const phone = document.getElementById('newPhone').value.trim();
   if (!name) { showToast('이름을 입력해주세요'); return; }
@@ -223,32 +364,35 @@ window.addMember = async function() {
   const clean = phone.replace(/-/g, '');
   if (!/^\d{9,11}$/.test(clean)) { showToast('올바른 핸드폰 번호를 입력해주세요'); return; }
   try {
-    await addDoc(collection(db, 'members'), { name, phone, attended: false, createdAt: new Date().toISOString() });
+    await addDoc(collection(db, 'sessions', currentSessionId, 'members'), { name, phone, attended: false, createdAt: new Date().toISOString() });
     document.getElementById('newName').value = '';
     document.getElementById('newPhone').value = '';
     showToast(name + ' 님이 등록되었습니다');
   } catch(e) { showToast('오류: ' + e.message); }
 };
 
+/* ── 교육생 삭제 ── */
 window.deleteMember = async function(id, name) {
   if (!confirm(name + ' 님을 삭제하시겠습니까?')) return;
   try {
-    await deleteDoc(doc(db, 'members', id));
+    await deleteDoc(doc(db, 'sessions', currentSessionId, 'members', id));
     showToast('삭제되었습니다');
   } catch(e) { showToast('오류: ' + e.message); }
 };
 
+/* ── 출석 초기화 ── */
 window.resetAllAttendance = async function() {
   if (!confirm('모든 출석을 초기화하시겠습니까?')) return;
   try {
-    const snap = await getDocs(collection(db, 'members'));
-    const updates = [];
-    snap.forEach(d => updates.push(updateDoc(doc(db, 'members', d.id), { attended: false, attendedAt: null })));
-    await Promise.all(updates);
+    const snap = await getDocs(collection(db, 'sessions', currentSessionId, 'members'));
+    const batch = writeBatch(db);
+    snap.forEach(d => batch.update(d.ref, { attended: false, attendedAt: null }));
+    await batch.commit();
     showToast('출석이 초기화되었습니다');
   } catch(e) { showToast('오류: ' + e.message); }
 };
 
+/* ── CSV 양식 다운로드 ── */
 window.downloadTemplate = function() {
   const csv = '\uFEFF이름,핸드폰번호\n홍길동,010-1234-5678\n김철수,010-9876-5432';
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -258,6 +402,7 @@ window.downloadTemplate = function() {
   a.click();
 };
 
+/* ── CSV 업로드 ── */
 window.handleCsv = function(input) {
   const file = input.files[0];
   if (!file) return;
@@ -280,7 +425,7 @@ window.handleCsv = function(input) {
     if (!confirm(toAdd.length + '명을 등록하시겠습니까?')) { input.value = ''; return; }
     try {
       const now = new Date().toISOString();
-      await Promise.all(toAdd.map(m => addDoc(collection(db, 'members'), { ...m, attended: false, createdAt: now })));
+      await Promise.all(toAdd.map(m => addDoc(collection(db, 'sessions', currentSessionId, 'members'), { ...m, attended: false, createdAt: now })));
       showToast(toAdd.length + '명이 등록되었습니다');
     } catch(e) { showToast('오류: ' + e.message); }
     input.value = '';
@@ -288,8 +433,10 @@ window.handleCsv = function(input) {
   reader.readAsText(file, 'UTF-8');
 };
 
+/* ── 출석 결과 내보내기 ── */
 window.downloadResult = function() {
   if (!currentMembers.length) { showToast('명단이 없습니다'); return; }
+  const s = sessions.find(x => x.id === currentSessionId);
   let csv = '\uFEFF이름,핸드폰번호,출석여부,출석시간\n';
   currentMembers.forEach(m => {
     const time = m.attendedAt ? new Date(m.attendedAt).toLocaleString('ko-KR') : '';
@@ -298,10 +445,11 @@ window.downloadResult = function() {
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = '출석결과_' + new Date().toLocaleDateString('ko-KR').replace(/\. /g, '-').replace('.', '') + '.csv';
+  a.download = (s ? s.name : '출석결과') + '_' + new Date().toLocaleDateString('ko-KR').replace(/\. /g,'-').replace('.','') + '.csv';
   a.click();
 };
 
+/* ── 핸드폰 하이픈 ── */
 document.getElementById('newPhone').addEventListener('input', function() {
   let v = this.value.replace(/\D/g, '');
   if (v.length <= 3) this.value = v;
