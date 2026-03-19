@@ -100,8 +100,8 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 let digits = [];
-let foundId = null;
-let foundName = null;
+let currentId = null;
+let currentName = null;
 
 window.pressNum = function(n) {
   if (digits.length >= 4) return;
@@ -151,17 +151,17 @@ window.doSearch = async function() {
       return;
     }
     const m = matched[0];
-    foundId = m.id;
-    saveName = m.name;
+    currentId = m.id;
+    currentName = m.name;
     if (m.attended) {
       showResult('found',
-        '<div class="result-name">' + m.name + ' 님</div>' +
+        '<div class="result-name">' + currentName + ' 님</div>' +
         '<div class="result-sub" style="color:#15803d;font-weight:500">이미 출석 완료된 사용자입니다 ✓</div>'
       );
       return;
     }
     showResult('found',
-      '<div class="result-name">' + m.name + ' 님</div>' +
+      '<div class="result-name">' + currentName + ' 님</div>' +
       '<div class="result-sub">출석체크 버튼을 눌러 출석을 완료하세요</div>' +
       '<button class="btn-green" id="attendBtn">✓ 출석체크</button>'
     );
@@ -173,18 +173,18 @@ window.doSearch = async function() {
 };
 
 async function doAttend() {
-  if (!foundId) return;
-  const saveId = foundId;
-  const saveName = foundName;
+  if (!currentId) return;
+  const id = currentId;
+  const name = currentName;
   showLoader(true, '출석 처리 중...');
   hideResult();
   try {
-    await updateDoc(doc(db, 'members', saveId), { attended: true, attendedAt: new Date().toISOString() });
+    await updateDoc(doc(db, 'members', id), { attended: true, attendedAt: new Date().toISOString() });
     showLoader(false);
     showResult('done',
       '<div class="done-icon">✓</div>' +
       '<div class="done-msg">출석이 완료되었습니다!</div>' +
-      '<div class="done-sub">' + foundName + ' 님의 출석이 기록되었습니다</div>' +
+      '<div class="done-sub">' + name + ' 님의 출석이 기록되었습니다</div>' +
       '<button class="btn-ghost" id="resetBtn">처음으로 돌아가기</button>'
     );
     document.getElementById('resetBtn').addEventListener('click', doReset);
@@ -212,8 +212,8 @@ function showResult(type, html) {
 
 function hideResult() {
   document.getElementById('resultCard').className = 'result';
-  foundId = null;
-  foundName = null;
+  currentId = null;
+  currentName = null;
 }
 
 function showLoader(show, msg) {
