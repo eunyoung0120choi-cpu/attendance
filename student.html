@@ -14,6 +14,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f5f5f5;min-height:100vh;d
 .hdr-icon{width:68px;height:68px;background:#dbeafe;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto .9rem;font-size:30px}
 .hdr h1{font-size:26px;font-weight:700;color:#111827;margin-bottom:.3rem}
 .hdr p{font-size:15px;color:#6b7280}
+.session-badge{display:inline-block;background:#dbeafe;color:#1d4ed8;font-size:13px;font-weight:500;padding:4px 12px;border-radius:20px;margin-top:.5rem}
 .pin-row{display:flex;gap:12px;justify-content:center;margin-bottom:1.5rem}
 .pin-box{width:66px;height:74px;border:1.5px solid #d1d5db;border-radius:12px;font-size:30px;font-weight:700;background:#f9fafb;color:#111827;display:flex;align-items:center;justify-content:center;transition:.15s}
 .pin-box.active{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.18);background:#fff}
@@ -43,6 +44,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f5f5f5;min-height:100vh;d
 .loader{display:none;justify-content:center;align-items:center;gap:10px;padding:1.1rem 0;color:#6b7280;font-size:15px}
 .loader.show{display:flex}
 .spinner{width:22px;height:22px;border:2.5px solid #e5e7eb;border-top-color:#3b82f6;border-radius:50%;animation:spin .7s linear infinite}
+.no-session{text-align:center;padding:2rem 1rem;color:#6b7280;font-size:15px;line-height:1.7}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 @keyframes popIn{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
@@ -51,33 +53,39 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f5f5f5;min-height:100vh;d
 </head>
 <body>
 <div class="app">
-  <div class="card">
+  <div class="card" id="mainCard">
     <div class="hdr">
       <div class="hdr-icon">📋</div>
       <h1>출석체크</h1>
-      <p>핸드폰 번호 뒷자리 4자리를 입력하세요</p>
+      <div id="sessionBadge"></div>
     </div>
-    <div class="pin-row">
-      <div class="pin-box active" id="p0"></div>
-      <div class="pin-box" id="p1"></div>
-      <div class="pin-box" id="p2"></div>
-      <div class="pin-box" id="p3"></div>
+    <div id="inputArea">
+      <p style="text-align:center;color:#6b7280;font-size:15px;margin-bottom:1.5rem">핸드폰 번호 뒷자리 4자리를 입력하세요</p>
+      <div class="pin-row">
+        <div class="pin-box active" id="p0"></div>
+        <div class="pin-box" id="p1"></div>
+        <div class="pin-box" id="p2"></div>
+        <div class="pin-box" id="p3"></div>
+      </div>
+      <div class="numpad">
+        <button class="num-btn" onclick="pressNum('1')">1</button>
+        <button class="num-btn" onclick="pressNum('2')">2</button>
+        <button class="num-btn" onclick="pressNum('3')">3</button>
+        <button class="num-btn" onclick="pressNum('4')">4</button>
+        <button class="num-btn" onclick="pressNum('5')">5</button>
+        <button class="num-btn" onclick="pressNum('6')">6</button>
+        <button class="num-btn" onclick="pressNum('7')">7</button>
+        <button class="num-btn" onclick="pressNum('8')">8</button>
+        <button class="num-btn" onclick="pressNum('9')">9</button>
+        <button class="num-btn empty-btn"></button>
+        <button class="num-btn" onclick="pressNum('0')">0</button>
+        <button class="num-btn del-btn" onclick="pressBack()">⌫</button>
+      </div>
+      <button class="btn-primary" id="searchBtn" disabled onclick="doSearch()">조회하기</button>
     </div>
-    <div class="numpad">
-      <button class="num-btn" onclick="pressNum('1')">1</button>
-      <button class="num-btn" onclick="pressNum('2')">2</button>
-      <button class="num-btn" onclick="pressNum('3')">3</button>
-      <button class="num-btn" onclick="pressNum('4')">4</button>
-      <button class="num-btn" onclick="pressNum('5')">5</button>
-      <button class="num-btn" onclick="pressNum('6')">6</button>
-      <button class="num-btn" onclick="pressNum('7')">7</button>
-      <button class="num-btn" onclick="pressNum('8')">8</button>
-      <button class="num-btn" onclick="pressNum('9')">9</button>
-      <button class="num-btn empty-btn"></button>
-      <button class="num-btn" onclick="pressNum('0')">0</button>
-      <button class="num-btn del-btn" onclick="pressBack()">⌫</button>
+    <div id="noSessionArea" style="display:none">
+      <div class="no-session">⚠️ 현재 진행 중인 교육이 없습니다.<br>관리자에게 문의해주세요.</div>
     </div>
-    <button class="btn-primary" id="searchBtn" disabled onclick="doSearch()">조회하기</button>
   </div>
   <div class="loader" id="loader"><div class="spinner"></div><span id="loaderMsg">조회 중...</span></div>
   <div class="result" id="resultCard"><div id="resultInner"></div></div>
@@ -85,7 +93,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f5f5f5;min-height:100vh;d
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, doc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBKhTkI0yNVBAScE_Tqx2laMJKNVsc172s",
@@ -102,7 +110,31 @@ const db = getFirestore(app);
 let digits = [];
 let currentId = null;
 let currentName = null;
+let activeSessionId = null;
 
+/* ── 활성 교육 불러오기 ── */
+async function loadActiveSession() {
+  try {
+    const snap = await getDocs(query(collection(db, 'sessions'), where('isActive', '==', true)));
+    if (snap.empty) {
+      document.getElementById('inputArea').style.display = 'none';
+      document.getElementById('noSessionArea').style.display = 'block';
+      document.getElementById('sessionBadge').innerHTML = '';
+      return;
+    }
+    const s = snap.docs[0];
+    activeSessionId = s.id;
+    document.getElementById('inputArea').style.display = 'block';
+    document.getElementById('noSessionArea').style.display = 'none';
+    document.getElementById('sessionBadge').innerHTML = '<span class="session-badge">' + s.data().name + '</span>';
+  } catch(e) {
+    console.error(e);
+  }
+}
+
+loadActiveSession();
+
+/* ── PIN 입력 ── */
 window.pressNum = function(n) {
   if (digits.length >= 4) return;
   digits.push(n);
@@ -128,13 +160,14 @@ function updatePins() {
   }
 }
 
+/* ── 조회 ── */
 window.doSearch = async function() {
-  if (digits.length !== 4) return;
+  if (digits.length !== 4 || !activeSessionId) return;
   hideResult();
   showLoader(true, '조회 중...');
   const last4 = digits.join('');
   try {
-    const snap = await getDocs(collection(db, 'members'));
+    const snap = await getDocs(collection(db, 'sessions', activeSessionId, 'members'));
     const matched = [];
     snap.forEach(d => {
       const data = d.data();
@@ -172,6 +205,7 @@ window.doSearch = async function() {
   }
 };
 
+/* ── 출석체크 ── */
 async function doAttend() {
   if (!currentId) return;
   const id = currentId;
@@ -179,7 +213,10 @@ async function doAttend() {
   showLoader(true, '출석 처리 중...');
   hideResult();
   try {
-    await updateDoc(doc(db, 'members', id), { attended: true, attendedAt: new Date().toISOString() });
+    await updateDoc(doc(db, 'sessions', activeSessionId, 'members', id), {
+      attended: true,
+      attendedAt: new Date().toISOString()
+    });
     showLoader(false);
     showResult('done',
       '<div class="done-icon">✓</div>' +
