@@ -10,20 +10,14 @@
 body{font-family:'Noto Sans KR',sans-serif;background:#f5f5f5;min-height:100vh;display:flex;justify-content:center;padding:2rem 1rem 3rem}
 .app{width:100%;max-width:540px}
 .card{background:#fff;border-radius:16px;box-shadow:0 1px 4px rgba(0,0,0,.07);padding:1.5rem;margin-bottom:1rem}
-
-/* 잠금 화면 */
 .lock-wrap{text-align:center;padding:1.5rem .5rem}
 .lock-icon{font-size:52px;margin-bottom:1rem}
 .lock-title{font-size:22px;font-weight:700;color:#111827;margin-bottom:.4rem}
 .lock-sub{font-size:15px;color:#6b7280;margin-bottom:1.5rem}
 .lock-error{font-size:13px;color:#dc2626;margin-top:.6rem;min-height:20px}
-
-/* 헤더 */
 .page-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
 .page-title{font-size:20px;font-weight:700;color:#111827}
 .btn-lock{height:36px;padding:0 .85rem;border-radius:8px;background:transparent;color:#6b7280;border:1px solid #d1d5db;font-size:13px;font-family:inherit;cursor:pointer}
-
-/* 통계 카드 */
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem}
 .stat-card{background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.07);padding:1rem;text-align:center}
 .stat-num{font-size:26px;font-weight:700;color:#111827;margin-bottom:.2rem}
@@ -31,22 +25,25 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f5f5f5;min-height:100vh;d
 .stat-card.blue .stat-num{color:#2563eb}
 .stat-card.green .stat-num{color:#16a34a}
 .stat-card.gray .stat-num{color:#6b7280}
-
-/* 등록 폼 */
 .section-title{font-size:15px;font-weight:500;color:#374151;margin-bottom:.85rem}
 .field-row{margin-bottom:.85rem}
 .field-label{display:block;font-size:13px;color:#6b7280;margin-bottom:.35rem}
 input[type=text],input[type=tel],input[type=password]{width:100%;height:44px;border:1px solid #d1d5db;border-radius:10px;padding:0 .85rem;font-size:16px;font-family:inherit;background:#fff;color:#111827;outline:none;transition:.15s}
 input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.15)}
-
-/* 버튼 */
 .btn-primary{width:100%;height:50px;border-radius:12px;background:#3b82f6;color:#fff;border:none;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;transition:.15s}
-.btn-primary:disabled{opacity:.4;cursor:not-allowed}
 .btn-primary:active{transform:scale(.98)}
 .btn-danger{height:36px;padding:0 1rem;border-radius:8px;background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;font-size:13px;font-family:inherit;cursor:pointer;transition:.15s}
 .btn-danger:hover{background:#fee2e2}
-
-/* 명단 */
+.btn-gray{height:40px;padding:0 1rem;border-radius:8px;background:#f3f4f6;color:#374151;border:1px solid #d1d5db;font-size:13px;font-family:inherit;cursor:pointer;transition:.15s}
+.btn-gray:hover{background:#e5e7eb}
+.btn-green2{height:40px;padding:0 1rem;border-radius:8px;background:#f0fdf4;color:#15803d;border:1px solid #86efac;font-size:13px;font-family:inherit;cursor:pointer;transition:.15s}
+.btn-green2:hover{background:#dcfce7}
+.csv-area{background:#f9fafb;border:1.5px dashed #d1d5db;border-radius:10px;padding:1.25rem;text-align:center;cursor:pointer;transition:.15s;margin-bottom:.85rem}
+.csv-area:hover{border-color:#3b82f6;background:#eff6ff}
+.csv-area-icon{font-size:28px;margin-bottom:.4rem}
+.csv-area-text{font-size:14px;color:#6b7280}
+.csv-area-sub{font-size:12px;color:#9ca3af;margin-top:.2rem}
+.csv-btns{display:flex;gap:8px}
 .list-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem}
 .member-list{display:flex;flex-direction:column;gap:8px}
 .member-item{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px}
@@ -60,16 +57,11 @@ input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{border-c
 .del-btn-sm{width:28px;height:28px;border:none;background:transparent;cursor:pointer;color:#f87171;font-size:18px;display:flex;align-items:center;justify-content:center;border-radius:6px}
 .del-btn-sm:hover{background:#fee2e2}
 .empty-state{text-align:center;padding:2rem;color:#9ca3af;font-size:14px}
-
-/* 로더 */
 .loader{display:none;justify-content:center;align-items:center;gap:10px;padding:1.5rem;color:#6b7280;font-size:14px}
 .loader.show{display:flex}
 .spinner{width:20px;height:20px;border:2.5px solid #e5e7eb;border-top-color:#3b82f6;border-radius:50%;animation:spin .7s linear infinite}
-
-/* 토스트 */
 .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(60px);background:#1f2937;color:#fff;padding:.65rem 1.25rem;border-radius:10px;font-size:14px;opacity:0;transition:.3s;white-space:nowrap;pointer-events:none;z-index:999}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 </style>
@@ -77,7 +69,6 @@ input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{border-c
 <body>
 <div class="app">
 
-  <!-- 잠금 화면 -->
   <div id="lockScreen" class="card">
     <div class="lock-wrap">
       <div class="lock-icon">🔒</div>
@@ -89,25 +80,34 @@ input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{border-c
     </div>
   </div>
 
-  <!-- 관리 화면 -->
   <div id="adminContent" style="display:none">
-
-    <!-- 헤더 -->
     <div class="page-hdr">
       <div class="page-title">📋 출석 관리자</div>
       <button class="btn-lock" onclick="lockAdmin()">🔒 잠금</button>
     </div>
 
-    <!-- 통계 -->
     <div class="stats">
       <div class="stat-card blue"><div class="stat-num" id="statTotal">0</div><div class="stat-label">전체</div></div>
       <div class="stat-card green"><div class="stat-num" id="statDone">0</div><div class="stat-label">출석</div></div>
       <div class="stat-card gray"><div class="stat-num" id="statAbsent">0</div><div class="stat-label">미출석</div></div>
     </div>
 
-    <!-- 등록 폼 -->
     <div class="card">
-      <div class="section-title">새 교육생 등록</div>
+      <div class="section-title">CSV 일괄 등록</div>
+      <div class="csv-area" onclick="document.getElementById('csvFile').click()">
+        <div class="csv-area-icon">📂</div>
+        <div class="csv-area-text">CSV 파일을 클릭해서 선택하세요</div>
+        <div class="csv-area-sub">이름, 핸드폰번호 형식</div>
+      </div>
+      <input type="file" id="csvFile" accept=".csv" style="display:none" onchange="handleCsv(this)"/>
+      <div class="csv-btns">
+        <button class="btn-gray" style="flex:1" onclick="downloadTemplate()">📥 양식 다운로드</button>
+        <button class="btn-green2" style="flex:1" onclick="downloadResult()">📤 출석 결과 내보내기</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">개별 등록</div>
       <div class="field-row">
         <label class="field-label">이름</label>
         <input type="text" id="newName" placeholder="홍길동" maxlength="20"/>
@@ -119,7 +119,6 @@ input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{border-c
       <button class="btn-primary" style="margin-top:.25rem" onclick="addMember()">등록하기</button>
     </div>
 
-    <!-- 명단 -->
     <div class="card">
       <div class="list-header">
         <div class="section-title" style="margin-bottom:0">교육생 명단</div>
@@ -128,7 +127,6 @@ input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{border-c
       <div class="loader" id="listLoader"><div class="spinner"></div><span>불러오는 중...</span></div>
       <div class="member-list" id="memberList"></div>
     </div>
-
   </div>
 </div>
 
@@ -138,7 +136,6 @@ input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{border-c
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
 import { getFirestore, collection, getDocs, addDoc, doc, updateDoc, deleteDoc, onSnapshot, orderBy, query } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
-// ★ Firebase 설정 - 본인 설정값으로 교체하세요
 const firebaseConfig = {
   apiKey: "AIzaSyBKhTkI0yNVBAScE_Tqx2laMJKNVsc172s",
   authDomain: "attendance-626af.firebaseapp.com",
@@ -149,14 +146,11 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db  = getFirestore(app);
-
-// ★ 관리자 비밀번호 (원하는 숫자/문자로 변경하세요)
+const db = getFirestore(app);
 const ADMIN_PW = '1234';
-
 let unsubscribe = null;
+let currentMembers = [];
 
-/* ── 비밀번호 ── */
 window.checkPw = function() {
   const val = document.getElementById('pwInput').value;
   if (val === ADMIN_PW) {
@@ -177,31 +171,28 @@ window.lockAdmin = function() {
   document.getElementById('pwError').textContent = '';
 };
 
-/* ── 실시간 명단 구독 ── */
 function startListen() {
   document.getElementById('listLoader').classList.add('show');
   const q = query(collection(db, 'members'), orderBy('createdAt', 'asc'));
   unsubscribe = onSnapshot(q, snap => {
     document.getElementById('listLoader').classList.remove('show');
-    const members = [];
-    snap.forEach(d => members.push({ id: d.id, ...d.data() }));
-    renderList(members);
-    updateStats(members);
+    currentMembers = [];
+    snap.forEach(d => currentMembers.push({ id: d.id, ...d.data() }));
+    renderList(currentMembers);
+    updateStats(currentMembers);
   }, err => {
     document.getElementById('listLoader').classList.remove('show');
     showToast('오류: ' + err.message);
   });
 }
 
-/* ── 통계 ── */
 function updateStats(members) {
   const done = members.filter(m => m.attended).length;
-  document.getElementById('statTotal').textContent  = members.length;
-  document.getElementById('statDone').textContent   = done;
+  document.getElementById('statTotal').textContent = members.length;
+  document.getElementById('statDone').textContent = done;
   document.getElementById('statAbsent').textContent = members.length - done;
 }
 
-/* ── 명단 렌더링 ── */
 function renderList(members) {
   const list = document.getElementById('memberList');
   if (!members.length) {
@@ -210,8 +201,7 @@ function renderList(members) {
   }
   list.innerHTML = members.map(m => {
     const time = m.attendedAt ? new Date(m.attendedAt).toLocaleTimeString('ko-KR', {hour:'2-digit',minute:'2-digit'}) : '';
-    return `
-    <div class="member-item" style="animation:slideUp .2s ease">
+    return `<div class="member-item">
       <div class="member-info">
         <div class="member-name">${m.name}</div>
         <div class="member-phone">${m.phone}</div>
@@ -225,23 +215,21 @@ function renderList(members) {
   }).join('');
 }
 
-/* ── 교육생 추가 ── */
 window.addMember = async function() {
-  const name  = document.getElementById('newName').value.trim();
+  const name = document.getElementById('newName').value.trim();
   const phone = document.getElementById('newPhone').value.trim();
-  if (!name)  { showToast('이름을 입력해주세요'); return; }
+  if (!name) { showToast('이름을 입력해주세요'); return; }
   if (!phone) { showToast('핸드폰 번호를 입력해주세요'); return; }
-  const clean = phone.replace(/-/g,'');
+  const clean = phone.replace(/-/g, '');
   if (!/^\d{9,11}$/.test(clean)) { showToast('올바른 핸드폰 번호를 입력해주세요'); return; }
   try {
     await addDoc(collection(db, 'members'), { name, phone, attended: false, createdAt: new Date().toISOString() });
-    document.getElementById('newName').value  = '';
+    document.getElementById('newName').value = '';
     document.getElementById('newPhone').value = '';
     showToast(name + ' 님이 등록되었습니다');
   } catch(e) { showToast('오류: ' + e.message); }
 };
 
-/* ── 교육생 삭제 ── */
 window.deleteMember = async function(id, name) {
   if (!confirm(name + ' 님을 삭제하시겠습니까?')) return;
   try {
@@ -250,7 +238,6 @@ window.deleteMember = async function(id, name) {
   } catch(e) { showToast('오류: ' + e.message); }
 };
 
-/* ── 출석 초기화 ── */
 window.resetAllAttendance = async function() {
   if (!confirm('모든 출석을 초기화하시겠습니까?')) return;
   try {
@@ -262,15 +249,66 @@ window.resetAllAttendance = async function() {
   } catch(e) { showToast('오류: ' + e.message); }
 };
 
-/* ── 핸드폰 하이픈 자동 입력 ── */
+window.downloadTemplate = function() {
+  const csv = '\uFEFF이름,핸드폰번호\n홍길동,010-1234-5678\n김철수,010-9876-5432';
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '교육생_등록_양식.csv';
+  a.click();
+};
+
+window.handleCsv = function(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async function(e) {
+    const text = e.target.result;
+    const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+    const start = (lines[0].includes('이름') || lines[0].toLowerCase().includes('name')) ? 1 : 0;
+    const toAdd = [];
+    for (let i = start; i < lines.length; i++) {
+      const cols = lines[i].split(',');
+      const name = (cols[0] || '').trim();
+      const phone = (cols[1] || '').trim();
+      if (!name || !phone) continue;
+      const clean = phone.replace(/-/g, '');
+      if (!/^\d{9,11}$/.test(clean)) continue;
+      toAdd.push({ name, phone });
+    }
+    if (!toAdd.length) { showToast('유효한 데이터가 없습니다'); input.value = ''; return; }
+    if (!confirm(toAdd.length + '명을 등록하시겠습니까?')) { input.value = ''; return; }
+    try {
+      const now = new Date().toISOString();
+      await Promise.all(toAdd.map(m => addDoc(collection(db, 'members'), { ...m, attended: false, createdAt: now })));
+      showToast(toAdd.length + '명이 등록되었습니다');
+    } catch(e) { showToast('오류: ' + e.message); }
+    input.value = '';
+  };
+  reader.readAsText(file, 'UTF-8');
+};
+
+window.downloadResult = function() {
+  if (!currentMembers.length) { showToast('명단이 없습니다'); return; }
+  let csv = '\uFEFF이름,핸드폰번호,출석여부,출석시간\n';
+  currentMembers.forEach(m => {
+    const time = m.attendedAt ? new Date(m.attendedAt).toLocaleString('ko-KR') : '';
+    csv += `${m.name},${m.phone},${m.attended ? '출석' : '미출석'},${time}\n`;
+  });
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '출석결과_' + new Date().toLocaleDateString('ko-KR').replace(/\. /g, '-').replace('.', '') + '.csv';
+  a.click();
+};
+
 document.getElementById('newPhone').addEventListener('input', function() {
-  let v = this.value.replace(/\D/g,'');
+  let v = this.value.replace(/\D/g, '');
   if (v.length <= 3) this.value = v;
   else if (v.length <= 7) this.value = v.slice(0,3) + '-' + v.slice(3);
   else this.value = v.slice(0,3) + '-' + v.slice(3,7) + '-' + v.slice(7,11);
 });
 
-/* ── 토스트 ── */
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
