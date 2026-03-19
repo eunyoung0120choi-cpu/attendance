@@ -142,8 +142,8 @@ async function doSearch() {
     const matched = [];
     snap.forEach(d => {
       const data = d.data();
-      const phone = (data.phone || '').replace(/-/g, '');
-      if (phone.endsWith(last4)) matched.push({ id: d.id, ...data });
+      const phone = String(data.phone || '').replace(/-/g, '');
+      if (phone && phone.endsWith(last4)) matched.push({ id: d.id, ...data });
     });
     showLoader(false);
     if (matched.length === 0) {
