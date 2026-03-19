@@ -1,3 +1,8 @@
+물론이죠! 아래 전체 코드를 GitHub 편집창에 붙여넣으세요.
+
+GitHub에서 `student.html` → 연필 ✏️ → **Ctrl+A** → 전체 삭제 → 아래 코드 붙여넣기 → **Commit changes!**
+
+```html
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -29,7 +34,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f5f5f5;min-height:100vh;d
 .btn-green{width:100%;height:54px;border-radius:12px;background:#dcfce7;color:#15803d;border:1.5px solid #86efac;font-size:17px;font-weight:700;font-family:inherit;cursor:pointer;transition:.15s}
 .btn-green:active{transform:scale(.98)}
 .btn-ghost{width:100%;height:48px;border-radius:10px;background:transparent;color:#6b7280;border:1px solid #d1d5db;font-size:15px;font-family:inherit;cursor:pointer;transition:.15s}
-.btn-ghost:hover{background:#f9fafb}
 .result{border-radius:14px;padding:1.4rem;margin-top:.75rem;display:none;animation:slideUp .3s ease}
 .result.show{display:block}
 .result.found{background:#f0fdf4;border:1px solid #86efac}
@@ -88,7 +92,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f5f5f5;min-height:100vh;d
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
 import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
-// ★ Firebase 설정 - 본인 설정값으로 교체하세요
 const firebaseConfig = {
   apiKey: "AIzaSyBKhTkI0yNVBAScE_Tqx2laMJKNVsc172s",
   authDomain: "attendance-626af.firebaseapp.com",
@@ -99,40 +102,38 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db  = getFirestore(app);
+const db = getFirestore(app);
 
-let digits   = [];
-let foundId  = null;
+let digits = [];
+let foundId = null;
 let foundName = null;
 
-function pressNum(n) {
+window.pressNum = function(n) {
   if (digits.length >= 4) return;
   digits.push(n);
   updatePins();
   if (digits.length === 4) document.getElementById('searchBtn').disabled = false;
-}
-window.pressNum = pressNum;
+};
 
-function pressBack() {
+window.pressBack = function() {
   if (!digits.length) return;
   digits.pop();
   document.getElementById('searchBtn').disabled = true;
   hideResult();
   updatePins();
-}
-window.pressBack = pressBack;
+};
 
 function updatePins() {
   for (let i = 0; i < 4; i++) {
     const b = document.getElementById('p' + i);
     b.textContent = digits[i] ? '●' : '';
-    b.classList.remove('active','filled');
+    b.classList.remove('active', 'filled');
     if (i === digits.length) b.classList.add('active');
-    else if (digits[i])      b.classList.add('filled');
+    else if (digits[i]) b.classList.add('filled');
   }
 }
 
-async function doSearch() {
+window.doSearch = async function() {
   if (digits.length !== 4) return;
   hideResult();
   showLoader(true, '조회 중...');
@@ -155,7 +156,7 @@ async function doSearch() {
       return;
     }
     const m = matched[0];
-    foundId   = m.id;
+    foundId = m.id;
     foundName = m.name;
     if (m.attended) {
       showResult('found',
@@ -167,14 +168,14 @@ async function doSearch() {
     showResult('found',
       '<div class="result-name">' + m.name + ' 님</div>' +
       '<div class="result-sub">출석체크 버튼을 눌러 출석을 완료하세요</div>' +
-      '<button class="btn-green" onclick="doAttend()">✓ 출석체크</button>'
+      '<button class="btn-green" id="attendBtn">✓ 출석체크</button>'
     );
+    document.getElementById('attendBtn').addEventListener('click', doAttend);
   } catch(e) {
     showLoader(false);
     showResult('error', '<div class="result-error">⚠ 오류가 발생했습니다: ' + e.message + '</div>');
   }
-}
-window.doSearch = doSearch;
+};
 
 async function doAttend() {
   if (!foundId) return;
@@ -187,8 +188,9 @@ async function doAttend() {
       '<div class="done-icon">✓</div>' +
       '<div class="done-msg">출석이 완료되었습니다!</div>' +
       '<div class="done-sub">' + foundName + ' 님의 출석이 기록되었습니다</div>' +
-      '<button class="btn-ghost" onclick="doReset()">처음으로 돌아가기</button>'
+      '<button class="btn-ghost" id="resetBtn">처음으로 돌아가기</button>'
     );
+    document.getElementById('resetBtn').addEventListener('click', doReset);
     digits = [];
     updatePins();
     document.getElementById('searchBtn').disabled = true;
@@ -197,7 +199,6 @@ async function doAttend() {
     showResult('error', '<div class="result-error">⚠ 오류가 발생했습니다: ' + e.message + '</div>');
   }
 }
-window.doAttend = doAttend;
 
 function doReset() {
   digits = [];
@@ -205,17 +206,19 @@ function doReset() {
   document.getElementById('searchBtn').disabled = true;
   hideResult();
 }
-window.doReset = doReset;
 
 function showResult(type, html) {
   const rc = document.getElementById('resultCard');
   rc.className = 'result show ' + type;
   document.getElementById('resultInner').innerHTML = html;
 }
+
 function hideResult() {
   document.getElementById('resultCard').className = 'result';
-  foundId = null; foundName = null;
+  foundId = null;
+  foundName = null;
 }
+
 function showLoader(show, msg) {
   document.getElementById('loader').classList.toggle('show', show);
   document.getElementById('searchBtn').style.display = show ? 'none' : '';
