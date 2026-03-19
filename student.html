@@ -152,7 +152,7 @@ window.doSearch = async function() {
     }
     const m = matched[0];
     foundId = m.id;
-    foundName = m.name;
+    saveName = m.name;
     if (m.attended) {
       showResult('found',
         '<div class="result-name">' + m.name + ' 님</div>' +
@@ -174,10 +174,12 @@ window.doSearch = async function() {
 
 async function doAttend() {
   if (!foundId) return;
+  const saveId = foundId;
+  const saveName = foundName;
   showLoader(true, '출석 처리 중...');
   hideResult();
   try {
-    await updateDoc(doc(db, 'members', foundId), { attended: true, attendedAt: new Date().toISOString() });
+    await updateDoc(doc(db, 'members', saveId), { attended: true, attendedAt: new Date().toISOString() });
     showLoader(false);
     showResult('done',
       '<div class="done-icon">✓</div>' +
