@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>출석체크</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans KR',sans-serif;background:#f5f5f5;min-height:100vh;display:flex;justify-content:center;padding:1.5rem 1rem 3rem}
+.app{width:100%;max-width:520px}
+
+/* ── tabs ── */
+.tab-bar{display:flex;gap:8px;margin-bottom:1.25rem}
+.tab{flex:1;height:44px;border-radius:10px;border:1px solid #e5e7eb;background:#fff;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer;color:#6b7280;transition:.15s}
+.tab.active{background:#3b82f6;color:#fff;border-color:#3b82f6}
+
+/* ── card ── */
+.card{background:#fff;border-radius:16px;box-shadow:0 1px 4px rgba(0,0,0,.07);padding:1.5rem;margin-bottom:1rem}
+
+/* ── header ── */
+.hdr{text-align:center;margin-bottom:1.75rem}
+.hdr-icon{width:64px;height:64px;background:#dbeafe;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto .85rem;font-size:28px}
+.hdr h1{font-size:26px;font-weight:700;color:#111827;margin-bottom:.3rem}
+.hdr p{font-size:15px;color:#6b7280}
+
+/* ── PIN ── */
+.pin-row{display:flex;gap:12px;justify-content:center;margin-bottom:1.5rem}
+.pin-box{width:64px;height:72px;border:1.5px solid #d1d5db;border-radius:12px;font-size:28px;font-weight:700;background:#f9fafb;color:#111827;display:flex;align-items:center;justify-content:center;transition:.15s}
+.pin-box.active{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.18);background:#fff}
+.pin-box.filled{border-color:#9ca3af;background:#fff}
+
+/* ── numpad ── */
+.numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.num-btn{height:58px;border:1px solid #e5e7eb;border-radius:12px;background:#f9fafb;color:#111827;font-size:21px;font-weight:500;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;user-select:none;-webkit-tap-highlight-color:transparent;transition:.1s}
+.num-btn:active{background:#e5e7eb;transform:scale(.95)}
+.del-btn{font-size:17px;color:#6b7280}
+.empty-btn{background:transparent;border-color:transparent;pointer-events:none}
+
+/* ── action buttons ── */
+.btn-primary{width:100%;height:54px;border-radius:12px;background:#3b82f6;color:#fff;border:none;font-size:17px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:1.1rem;transition:.15s;-webkit-tap-highlight-color:transparent}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed}
+.btn-primary:not(:disabled):active{transform:scale(.98)}
+.btn-green{width:100%;height:52px;border-radius:12px;background:#dcfce7;color:#15803d;border:1.5px solid #86efac;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;transition:.15s}
+.btn-green:active{transform:scale(.98)}
+.btn-ghost{width:100%;height:46px;border-radius:10px;background:transparent;color:#6b7280;border:1px solid #d1d5db;font-size:15px;font-family:inherit;cursor:pointer;transition:.15s}
+.btn-ghost:hover{background:#f9fafb}
+
+/* ── result cards ── */
+.result{border-radius:14px;padding:1.4rem;margin-top:.75rem;display:none;animation:slideUp .3s ease}
+.result.show{display:block}
+.result.found{background:#f0fdf4;border:1px solid #86efac}
+.result.error{background:#fef2f2;border:1px solid #fca5a5}
+.result.done{background:#f0fdf4;border:2px solid #22c55e}
+.result-name{font-size:22px;font-weight:700;color:#15803d;margin-bottom:.3rem}
+.result-sub{font-size:14px;color:#6b7280;margin-bottom:1.1rem}
+.result-error{font-size:16px;font-weight:500;color:#dc2626}
+.done-icon{width:52px;height:52px;background:#dcfce7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto .9rem;font-size:24px;border:2px solid #86efac;animation:popIn .4s cubic-bezier(.175,.885,.32,1.275)}
+.done-msg{font-size:20px;font-weight:700;color:#15803d;text-align:center;margin-bottom:.4rem}
+.done-sub{font-size:14px;color:#6b7280;text-align:center;margin-bottom:1.1rem}
+
+/* ── loader ── */
+.loader{display:none;justify-content:center;align-items:center;gap:10px;padding:1.1rem 0;color:#6b7280;font-size:15px}
+.loader.show{display:flex}
+.spinner{width:22px;height:22px;border:2.5px solid #e5e7eb;border-top-color:#3b82f6;border-radius:50%;animation:spin .7s linear infinite}
+
+/* ── admin tab ── */
+.section-title{font-size:15px;font-weight:500;color:#374151;margin-bottom:.85rem}
+.field-row{margin-bottom:.85rem}
+.field-label{display:block;font-size:13px;color:#6b7280;margin-bottom:.35rem}
+input[type=text],input[type=tel]{width:100%;height:44px;border:1px solid #d1d5db;border-radius:10px;padding:0 .85rem;font-size:16px;font-family:inherit;background:#fff;color:#111827;outline:none;transition:.15s}
+input[type=text]:focus,input[type=tel]:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.15)}
+
+/* ── member list ── */
+.member-list{display:flex;flex-direction:column;gap:8px;margin-top:1rem}
+.member-item{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px}
+.member-info{display:flex;flex-direction:column;gap:2px}
+.member-name{font-size:16px;font-weight:500;color:#111827}
+.member-phone{font-size:13px;color:#6b7280}
+.member-right{display:flex;align-items:center;gap:8px}
+.badge-done{font-size:12px;font-weight:600;background:#dcfce7;color:#15803d;padding:3px 9px;border-radius:20px}
+.badge-none{font-size:12px;font-weight:500;background:#f3f4f6;color:#9ca3af;padding:3px 9px;border-radius:20px}
+.del-member{width:28px;height:28px;border:none;background:transparent;cursor:pointer;color:#f87171;font-size:18px;display:flex;align-items:center;justify-content:center;border-radius:6px}
+.del-member:hover{background:#fee2e2}
+.empty-state{text-align:center;padding:2rem;color:#9ca3af;font-size:15px}
+
+/* ── toast ── */
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(60px);background:#1f2937;color:#fff;padding:.65rem 1.25rem;border-radius:10px;font-size:14px;opacity:0;transition:.3s;white-space:nowrap;pointer-events:none;z-index:999}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── reset attendance ── */
+.reset-all-btn{width:100%;height:44px;border-radius:10px;background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;font-size:14px;font-family:inherit;cursor:pointer;margin-top:.5rem;transition:.15s}
+.reset-all-btn:hover{background:#fee2e2}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+@media(max-width:360px){.pin-box{width:54px;height:64px;font-size:24px}.num-btn{height:52px;font-size:19px}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="tab-bar">
+    <button class="tab active" id="tabCheck" onclick="switchTab('check')">출석체크</button>
+    <button class="tab" id="tabAdmin" onclick="switchTab('admin')">명단 관리</button>
+  </div>
+
+  <!-- ══ 출석체크 탭 ══ -->
+  <div id="panelCheck">
+    <div class="card">
+      <div class="hdr">
+        <div class="hdr-icon">📋</div>
+        <h1>출석체크</h1>
+        <p>핸드폰 번호 뒷자리 4자리를 입력하세요</p>
+      </div>
+
+      <div class="pin-row">
+        <div class="pin-box active" id="p0"></div>
+        <div class="pin-box" id="p1"></div>
+        <div class="pin-box" id="p2"></div>
+        <div class="pin-box" id="p3"></div>
+      </div>
+
+      <div class="numpad">
+        <button class="num-btn" onclick="pressNum('1')">1</button>
+        <button class="num-btn" onclick="pressNum('2')">2</button>
+        <button class="num-btn" onclick="pressNum('3')">3</button>
+        <button class="num-btn" onclick="pressNum('4')">4</button>
+        <button class="num-btn" onclick="pressNum('5')">5</button>
+        <button class="num-btn" onclick="pressNum('6')">6</button>
+        <button class="num-btn" onclick="pressNum('7')">7</button>
+        <button class="num-btn" onclick="pressNum('8')">8</button>
+        <button class="num-btn" onclick="pressNum('9')">9</button>
+        <button class="num-btn empty-btn"></button>
+        <button class="num-btn" onclick="pressNum('0')">0</button>
+        <button class="num-btn del-btn" onclick="pressBack()">⌫</button>
+      </div>
+
+      <button class="btn-primary" id="searchBtn" disabled onclick="doSearch()">조회하기</button>
+    </div>
+
+    <div class="loader" id="loader"><div class="spinner"></div><span id="loaderMsg">조회 중...</span></div>
+
+    <div class="result" id="resultCard">
+      <div id="resultInner"></div>
+    </div>
+  </div>
+
+  <!-- ══ 명단 관리 탭 ══ -->
+  <div id="panelAdmin" style="display:none">
+    <div class="card">
+      <div class="section-title">새 사용자 등록</div>
+      <div class="field-row">
+        <label class="field-label">이름</label>
+        <input type="text" id="newName" placeholder="홍길동" maxlength="20"/>
+      </div>
+      <div class="field-row">
+        <label class="field-label">핸드폰 번호</label>
+        <input type="tel" id="newPhone" placeholder="010-1234-5678" maxlength="13"/>
+      </div>
+      <button class="btn-primary" style="margin-top:.5rem" onclick="addMember()">등록하기</button>
+    </div>
+
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem">
+        <div class="section-title" style="margin-bottom:0">등록된 명단 <span id="memberCount" style="color:#6b7280;font-weight:400;font-size:13px"></span></div>
+        <button class="reset-all-btn" style="width:auto;height:36px;padding:0 1rem;margin-top:0;font-size:13px" onclick="resetAllAttendance()">출석 초기화</button>
+      </div>
+      <div class="member-list" id="memberList"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ──────────────────────────────
+   STATE
+────────────────────────────── */
+let members = [];   // [{id, name, phone, attended}]
+let digits   = [];
+let foundId  = null;
+let foundName = null;
+
+const STORAGE_KEY = 'attendance_members_v1';
+
+/* ──────────────────────────────
+   STORAGE (with fallback)
+────────────────────────────── */
+async function loadMembers() {
+  try {
+    const res = await window.storage.get(STORAGE_KEY);
+    if (res && res.value) {
+      members = JSON.parse(res.value);
+    }
+  } catch(_) {
+    // storage not available or key missing — start fresh
+    members = [];
+  }
+  renderMemberList();
+}
+
+async function saveMembers() {
+  try {
+    await window.storage.set(STORAGE_KEY, JSON.stringify(members));
+  } catch(_) {
+    // fallback: in-memory only
+  }
+}
+
+/* ──────────────────────────────
+   TABS
+────────────────────────────── */
+function switchTab(tab) {
+  document.getElementById('panelCheck').style.display = tab === 'check' ? '' : 'none';
+  document.getElementById('panelAdmin').style.display = tab === 'admin' ? '' : 'none';
+  document.getElementById('tabCheck').classList.toggle('active', tab === 'check');
+  document.getElementById('tabAdmin').classList.toggle('active', tab === 'admin');
+  if (tab === 'admin') renderMemberList();
+}
+
+/* ──────────────────────────────
+   PIN PAD
+────────────────────────────── */
+function pressNum(n) {
+  if (digits.length >= 4) return;
+  digits.push(n);
+  updatePins();
+  if (digits.length === 4) document.getElementById('searchBtn').disabled = false;
+}
+
+function pressBack() {
+  if (!digits.length) return;
+  digits.pop();
+  document.getElementById('searchBtn').disabled = true;
+  hideResult();
+  updatePins();
+}
+
+function updatePins() {
+  for (let i = 0; i < 4; i++) {
+    const b = document.getElementById('p' + i);
+    b.textContent = digits[i] ? '●' : '';
+    b.classList.remove('active','filled');
+    if (i === digits.length) b.classList.add('active');
+    else if (digits[i])      b.classList.add('filled');
+  }
+}
+
+/* ──────────────────────────────
+   SEARCH
+────────────────────────────── */
+function doSearch() {
+  if (digits.length !== 4) return;
+  hideResult();
+  showLoader(true, '조회 중...');
+
+  // simulate async for UX polish
+  setTimeout(() => {
+    const last4 = digits.join('');
+    const matched = members.filter(m => {
+      const clean = m.phone.replace(/-/g,'');
+      return clean.endsWith(last4);
+    });
+
+    showLoader(false);
+
+    if (matched.length === 0) {
+      showResult('error', `<div class="result-error">⚠ 일치하는 번호를 찾을 수 없습니다.</div>`);
+      return;
+    }
+    if (matched.length > 1) {
+      showResult('error', `<div class="result-error">⚠ 동일한 번호가 여러 명 존재합니다. 관리자에게 문의하세요.</div>`);
+      return;
+    }
+
+    const m = matched[0];
+    foundId   = m.id;
+    foundName = m.name;
+
+    if (m.attended) {
+      showResult('found',
+        `<div class="result-name">${m.name} 님</div>` +
+        `<div class="result-sub" style="color:#15803d;font-weight:500">이미 출석 완료된 사용자입니다 ✓</div>`
+      );
+      return;
+    }
+
+    showResult('found',
+      `<div class="result-name">${m.name} 님</div>` +
+      `<div class="result-sub">출석체크 버튼을 눌러 출석을 완료하세요</div>` +
+      `<button class="btn-green" onclick="doAttend()">✓ 출석체크</button>`
+    );
+  }, 400);
+}
+
+/* ──────────────────────────────
+   ATTEND
+────────────────────────────── */
+function doAttend() {
+  if (!foundId) return;
+  showLoader(true, '출석 처리 중...');
+  hideResult();
+
+  setTimeout(async () => {
+    const idx = members.findIndex(m => m.id === foundId);
+    if (idx === -1) { showLoader(false); return; }
+    members[idx].attended = true;
+    await saveMembers();
+    showLoader(false);
+
+    showResult('done',
+      `<div class="done-icon">✓</div>` +
+      `<div class="done-msg">출석이 완료되었습니다!</div>` +
+      `<div class="done-sub">${foundName} 님의 출석이 기록되었습니다</div>` +
+      `<button class="btn-ghost" onclick="doReset()">처음으로 돌아가기</button>`
+    );
+
+    digits = [];
+    updatePins();
+    document.getElementById('searchBtn').disabled = true;
+  }, 500);
+}
+
+/* ──────────────────────────────
+   HELPERS
+────────────────────────────── */
+function showResult(type, html) {
+  const rc = document.getElementById('resultCard');
+  rc.className = 'result show ' + type;
+  document.getElementById('resultInner').innerHTML = html;
+}
+
+function hideResult() {
+  const rc = document.getElementById('resultCard');
+  rc.className = 'result';
+  foundId = null; foundName = null;
+}
+
+function showLoader(show, msg) {
+  document.getElementById('loader').classList.toggle('show', show);
+  document.getElementById('searchBtn').style.display = show ? 'none' : '';
+  if (msg) document.getElementById('loaderMsg').textContent = msg;
+}
+
+function doReset() {
+  digits = [];
+  updatePins();
+  document.getElementById('searchBtn').disabled = true;
+  hideResult();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+/* ──────────────────────────────
+   ADMIN — ADD MEMBER
+────────────────────────────── */
+async function addMember() {
+  const name  = document.getElementById('newName').value.trim();
+  const phone = document.getElementById('newPhone').value.trim();
+
+  if (!name)  { showToast('이름을 입력해주세요'); return; }
+  if (!phone) { showToast('핸드폰 번호를 입력해주세요'); return; }
+
+  const clean = phone.replace(/-/g,'');
+  if (!/^\d{9,11}$/.test(clean)) { showToast('올바른 핸드폰 번호를 입력해주세요'); return; }
+
+  members.push({ id: Date.now().toString(), name, phone, attended: false });
+  await saveMembers();
+  renderMemberList();
+  document.getElementById('newName').value  = '';
+  document.getElementById('newPhone').value = '';
+  showToast(`${name} 님이 등록되었습니다`);
+}
+
+/* ──────────────────────────────
+   ADMIN — DELETE
+────────────────────────────── */
+async function deleteMember(id) {
+  const m = members.find(x => x.id === id);
+  if (!m) return;
+  if (!confirm(`'${m.name}' 님을 삭제하시겠습니까?`)) return;
+  members = members.filter(x => x.id !== id);
+  await saveMembers();
+  renderMemberList();
+  showToast('삭제되었습니다');
+}
+
+/* ──────────────────────────────
+   ADMIN — RESET ALL ATTENDANCE
+────────────────────────────── */
+async function resetAllAttendance() {
+  if (!members.length) { showToast('등록된 명단이 없습니다'); return; }
+  if (!confirm('모든 출석을 초기화하시겠습니까?')) return;
+  members = members.map(m => ({ ...m, attended: false }));
+  await saveMembers();
+  renderMemberList();
+  showToast('출석이 초기화되었습니다');
+}
+
+/* ──────────────────────────────
+   ADMIN — RENDER LIST
+────────────────────────────── */
+function renderMemberList() {
+  const list = document.getElementById('memberList');
+  const cnt  = document.getElementById('memberCount');
+  const attended = members.filter(m => m.attended).length;
+  cnt.textContent = `(${attended} / ${members.length}명 출석)`;
+
+  if (!members.length) {
+    list.innerHTML = '<div class="empty-state">등록된 명단이 없습니다.<br>위에서 사용자를 추가해보세요.</div>';
+    return;
+  }
+
+  list.innerHTML = members.map(m => `
+    <div class="member-item">
+      <div class="member-info">
+        <div class="member-name">${m.name}</div>
+        <div class="member-phone">${m.phone}</div>
+      </div>
+      <div class="member-right">
+        ${m.attended
+          ? '<span class="badge-done">출석 ✓</span>'
+          : '<span class="badge-none">미출석</span>'}
+        <button class="del-member" onclick="deleteMember('${m.id}')" title="삭제">×</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ──────────────────────────────
+   PHONE AUTO-HYPHEN
+────────────────────────────── */
+document.getElementById('newPhone').addEventListener('input', function() {
+  let v = this.value.replace(/\D/g,'');
+  if (v.length <= 3) this.value = v;
+  else if (v.length <= 7) this.value = v.slice(0,3) + '-' + v.slice(3);
+  else this.value = v.slice(0,3) + '-' + v.slice(3,7) + '-' + v.slice(7,11);
+});
+
+/* ──────────────────────────────
+   INIT
+────────────────────────────── */
+loadMembers();
+</script>
+</body>
+</html>
