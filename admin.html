@@ -19,12 +19,14 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f5f5f5;min-height:100vh;d
 .page-title{font-size:20px;font-weight:700;color:#111827}
 .btn-lock{height:36px;padding:0 .85rem;border-radius:8px;background:transparent;color:#6b7280;border:1px solid #d1d5db;font-size:13px;font-family:inherit;cursor:pointer}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem}
-.stat-card{background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.07);padding:1rem;text-align:center}
-.stat-num{font-size:26px;font-weight:700;margin-bottom:.2rem}
-.stat-label{font-size:12px;color:#6b7280}
+.stat-card{background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.07);padding:1rem;text-align:center;cursor:pointer;transition:.15s;border:2px solid transparent}
+.stat-card:hover{border-color:#e5e7eb}
+.stat-card.selected{border-color:#3b82f6}
 .stat-card.blue .stat-num{color:#2563eb}
 .stat-card.green .stat-num{color:#16a34a}
 .stat-card.gray .stat-num{color:#6b7280}
+.stat-num{font-size:26px;font-weight:700;margin-bottom:.2rem}
+.stat-label{font-size:12px;color:#6b7280}
 .section-title{font-size:15px;font-weight:500;color:#374151;margin-bottom:.85rem}
 .field-row{margin-bottom:.85rem}
 .field-label{display:block;font-size:13px;color:#6b7280;margin-bottom:.35rem}
@@ -40,7 +42,6 @@ input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{border-c
 .btn-green2:hover{background:#dcfce7}
 .btn-active{height:36px;padding:0 1rem;border-radius:8px;background:#3b82f6;color:#fff;border:none;font-size:13px;font-family:inherit;cursor:pointer}
 .btn-active.on{background:#16a34a}
-/* 교육 목록 */
 .session-list{display:flex;flex-direction:column;gap:8px}
 .session-item{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1rem;border-radius:10px;border:1px solid #e5e7eb;background:#f9fafb;cursor:pointer;transition:.15s}
 .session-item.active{background:#eff6ff;border-color:#93c5fd}
@@ -51,11 +52,16 @@ input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{border-c
 .session-right{display:flex;align-items:center;gap:8px}
 .badge-active{font-size:11px;font-weight:600;background:#dbeafe;color:#1d4ed8;padding:2px 8px;border-radius:20px}
 .badge-inactive{font-size:11px;color:#9ca3af;padding:2px 8px}
-/* CSV */
 .csv-area{background:#f9fafb;border:1.5px dashed #d1d5db;border-radius:10px;padding:1.1rem;text-align:center;cursor:pointer;transition:.15s;margin-bottom:.85rem}
 .csv-area:hover{border-color:#3b82f6;background:#eff6ff}
 .csv-btns{display:flex;gap:8px}
+/* 필터 탭 */
+.filter-tabs{display:flex;gap:6px;margin-bottom:.85rem}
+.filter-tab{flex:1;height:36px;border-radius:8px;border:1px solid #e5e7eb;background:#f9fafb;color:#6b7280;font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;transition:.15s}
+.filter-tab.active{background:#3b82f6;color:#fff;border-color:#3b82f6}
 /* 명단 */
+.list-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem}
+.list-count{font-size:13px;color:#6b7280}
 .member-list{display:flex;flex-direction:column;gap:8px}
 .member-item{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px}
 .member-info{display:flex;flex-direction:column;gap:2px}
@@ -68,6 +74,13 @@ input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{border-c
 .del-btn-sm{width:28px;height:28px;border:none;background:transparent;cursor:pointer;color:#f87171;font-size:18px;display:flex;align-items:center;justify-content:center;border-radius:6px}
 .del-btn-sm:hover{background:#fee2e2}
 .empty-state{text-align:center;padding:2rem;color:#9ca3af;font-size:14px}
+/* 페이지네이션 */
+.pagination{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:1rem}
+.page-btn{width:36px;height:36px;border-radius:8px;border:1px solid #e5e7eb;background:#fff;color:#374151;font-size:14px;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
+.page-btn:hover{background:#f3f4f6}
+.page-btn.active{background:#3b82f6;color:#fff;border-color:#3b82f6}
+.page-btn:disabled{opacity:.4;cursor:not-allowed}
+.page-info{font-size:13px;color:#6b7280}
 .loader{display:none;justify-content:center;align-items:center;gap:10px;padding:1.5rem;color:#6b7280;font-size:14px}
 .loader.show{display:flex}
 .spinner{width:20px;height:20px;border:2.5px solid #e5e7eb;border-top-color:#3b82f6;border-radius:50%;animation:spin .7s linear infinite}
@@ -97,7 +110,6 @@ input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{border-c
       <button class="btn-lock" onclick="lockAdmin()">🔒 잠금</button>
     </div>
 
-    <!-- 교육 목록 -->
     <div class="card">
       <div class="section-title">교육 목록</div>
       <div class="session-list" id="sessionList">
@@ -112,11 +124,10 @@ input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{border-c
       <button class="btn-primary" onclick="createSession()">교육 만들기</button>
     </div>
 
-    <!-- 선택된 교육 -->
     <div id="selectedPanel" style="display:none">
 
       <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
+        <div style="display:flex;align-items:center;justify-content:space-between">
           <div>
             <div style="font-size:17px;font-weight:700;color:#111827" id="selectedName"></div>
             <div style="font-size:12px;color:#6b7280;margin-top:2px" id="selectedDate"></div>
@@ -125,10 +136,20 @@ input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{border-c
         </div>
       </div>
 
+      <!-- 통계 (클릭하면 필터) -->
       <div class="stats">
-        <div class="stat-card blue"><div class="stat-num" id="statTotal">0</div><div class="stat-label">전체</div></div>
-        <div class="stat-card green"><div class="stat-num" id="statDone">0</div><div class="stat-label">출석</div></div>
-        <div class="stat-card gray"><div class="stat-num" id="statAbsent">0</div><div class="stat-label">미출석</div></div>
+        <div class="stat-card blue" id="statAll" onclick="setFilter('all')">
+          <div class="stat-num" id="statTotal">0</div>
+          <div class="stat-label">전체</div>
+        </div>
+        <div class="stat-card green" id="statAttended" onclick="setFilter('attended')">
+          <div class="stat-num" id="statDone">0</div>
+          <div class="stat-label">출석</div>
+        </div>
+        <div class="stat-card gray" id="statAbsentCard" onclick="setFilter('absent')">
+          <div class="stat-num" id="statAbsent">0</div>
+          <div class="stat-label">미출석</div>
+        </div>
       </div>
 
       <div class="card">
@@ -166,8 +187,23 @@ input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{border-c
             <button class="btn-danger" onclick="deleteSession()">교육 삭제</button>
           </div>
         </div>
+
+        <!-- 필터 탭 -->
+        <div class="filter-tabs">
+          <button class="filter-tab active" id="tab-all" onclick="setFilter('all')">전체</button>
+          <button class="filter-tab" id="tab-attended" onclick="setFilter('attended')">출석</button>
+          <button class="filter-tab" id="tab-absent" onclick="setFilter('absent')">미출석</button>
+        </div>
+
+        <div class="list-header-row">
+          <div class="list-count" id="listCount"></div>
+        </div>
+
         <div class="loader" id="listLoader"><div class="spinner"></div><span>불러오는 중...</span></div>
         <div class="member-list" id="memberList"></div>
+
+        <!-- 페이지네이션 -->
+        <div class="pagination" id="pagination"></div>
       </div>
 
     </div>
@@ -178,7 +214,7 @@ input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{border-c
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc, doc, updateDoc, deleteDoc, onSnapshot, orderBy, query, writeBatch, getDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, doc, updateDoc, deleteDoc, onSnapshot, orderBy, query, writeBatch } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBKhTkI0yNVBAScE_Tqx2laMJKNVsc172s",
@@ -192,11 +228,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const ADMIN_PW = '1234';
+const PAGE_SIZE = 10;
 
 let sessions = [];
 let currentSessionId = null;
 let currentMembers = [];
 let memberUnsub = null;
+let currentFilter = 'all';
+let currentPage = 1;
 
 /* ── 비밀번호 ── */
 window.checkPw = function() {
@@ -219,7 +258,7 @@ window.lockAdmin = function() {
   document.getElementById('pwError').textContent = '';
 };
 
-/* ── 교육 목록 로드 ── */
+/* ── 교육 목록 ── */
 async function loadSessions() {
   const snap = await getDocs(query(collection(db, 'sessions'), orderBy('createdAt', 'desc')));
   sessions = [];
@@ -229,10 +268,7 @@ async function loadSessions() {
 
 function renderSessions() {
   const list = document.getElementById('sessionList');
-  if (!sessions.length) {
-    list.innerHTML = '<div class="empty-state">등록된 교육이 없습니다.</div>';
-    return;
-  }
+  if (!sessions.length) { list.innerHTML = '<div class="empty-state">등록된 교육이 없습니다.</div>'; return; }
   list.innerHTML = sessions.map(s => `
     <div class="session-item ${s.id === currentSessionId ? 'active' : ''}" onclick="selectSession('${s.id}')">
       <div class="session-left">
@@ -242,14 +278,15 @@ function renderSessions() {
       <div class="session-right">
         ${s.isActive ? '<span class="badge-active">진행중</span>' : '<span class="badge-inactive">대기</span>'}
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
 /* ── 교육 선택 ── */
 window.selectSession = function(id) {
   if (memberUnsub) { memberUnsub(); memberUnsub = null; }
   currentSessionId = id;
+  currentFilter = 'all';
+  currentPage = 1;
   const s = sessions.find(x => x.id === id);
   document.getElementById('selectedPanel').style.display = 'block';
   document.getElementById('selectedName').textContent = s.name;
@@ -257,16 +294,16 @@ window.selectSession = function(id) {
   const btn = document.getElementById('activateBtn');
   btn.textContent = s.isActive ? '✓ 진행중' : '활성화';
   btn.className = s.isActive ? 'btn-active on' : 'btn-active';
+  setFilterTab('all');
   renderSessions();
   listenMembers();
 };
 
-/* ── 교육 활성화 토글 ── */
+/* ── 활성화 토글 ── */
 window.toggleActive = async function() {
   const s = sessions.find(x => x.id === currentSessionId);
   if (!s) return;
   if (!s.isActive) {
-    // 기존 활성 교육 비활성화
     const batch = writeBatch(db);
     sessions.filter(x => x.isActive).forEach(x => batch.update(doc(db, 'sessions', x.id), { isActive: false }));
     batch.update(doc(db, 'sessions', currentSessionId), { isActive: true });
@@ -276,7 +313,7 @@ window.toggleActive = async function() {
   }
   await loadSessions();
   selectSession(currentSessionId);
-  showToast(s.isActive ? '비활성화되었습니다' : '활성화되었습니다! 교육생 앱에 반영됩니다');
+  showToast(s.isActive ? '비활성화되었습니다' : '활성화되었습니다!');
 };
 
 /* ── 교육 만들기 ── */
@@ -317,14 +354,15 @@ function listenMembers() {
     document.getElementById('listLoader').classList.remove('show');
     currentMembers = [];
     snap.forEach(d => currentMembers.push({ id: d.id, ...d.data() }));
-    renderList(currentMembers);
     updateStats(currentMembers);
+    renderFiltered();
   }, err => {
     document.getElementById('listLoader').classList.remove('show');
     showToast('오류: ' + err.message);
   });
 }
 
+/* ── 통계 ── */
 function updateStats(members) {
   const done = members.filter(m => m.attended).length;
   document.getElementById('statTotal').textContent = members.length;
@@ -332,13 +370,51 @@ function updateStats(members) {
   document.getElementById('statAbsent').textContent = members.length - done;
 }
 
-function renderList(members) {
+/* ── 필터 ── */
+window.setFilter = function(f) {
+  currentFilter = f;
+  currentPage = 1;
+  setFilterTab(f);
+  renderFiltered();
+};
+
+function setFilterTab(f) {
+  ['all','attended','absent'].forEach(x => {
+    document.getElementById('tab-' + x).classList.toggle('active', x === f);
+  });
+  ['statAll','statAttended','statAbsentCard'].forEach((id, i) => {
+    const f2 = ['all','attended','absent'][i];
+    document.getElementById(id).classList.toggle('selected', f2 === f);
+  });
+}
+
+function getFiltered() {
+  if (currentFilter === 'attended') return currentMembers.filter(m => m.attended);
+  if (currentFilter === 'absent') return currentMembers.filter(m => !m.attended);
+  return currentMembers;
+}
+
+/* ── 렌더링 (페이지네이션 포함) ── */
+function renderFiltered() {
+  const filtered = getFiltered();
+  const total = filtered.length;
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  if (currentPage > totalPages) currentPage = totalPages;
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const paged = filtered.slice(start, start + PAGE_SIZE);
+
+  document.getElementById('listCount').textContent =
+    (currentFilter === 'all' ? '전체' : currentFilter === 'attended' ? '출석' : '미출석') +
+    ' ' + total + '명 · ' + currentPage + ' / ' + totalPages + ' 페이지';
+
   const list = document.getElementById('memberList');
-  if (!members.length) {
-    list.innerHTML = '<div class="empty-state">등록된 교육생이 없습니다.</div>';
+  if (!paged.length) {
+    list.innerHTML = '<div class="empty-state">해당하는 교육생이 없습니다.</div>';
+    document.getElementById('pagination').innerHTML = '';
     return;
   }
-  list.innerHTML = members.map(m => {
+
+  list.innerHTML = paged.map(m => {
     const time = m.attendedAt ? new Date(m.attendedAt).toLocaleTimeString('ko-KR', {hour:'2-digit',minute:'2-digit'}) : '';
     return `<div class="member-item">
       <div class="member-info">
@@ -352,7 +428,35 @@ function renderList(members) {
       </div>
     </div>`;
   }).join('');
+
+  renderPagination(totalPages);
 }
+
+function renderPagination(totalPages) {
+  const pg = document.getElementById('pagination');
+  if (totalPages <= 1) { pg.innerHTML = ''; return; }
+
+  let html = `<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
+
+  for (let i = 1; i <= totalPages; i++) {
+    if (totalPages > 7 && i > 2 && i < totalPages - 1 && Math.abs(i - currentPage) > 1) {
+      if (i === 3 || i === totalPages - 2) html += `<span class="page-info">…</span>`;
+      continue;
+    }
+    html += `<button class="page-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+  }
+
+  html += `<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>›</button>`;
+  pg.innerHTML = html;
+}
+
+window.goPage = function(p) {
+  const totalPages = Math.ceil(getFiltered().length / PAGE_SIZE);
+  if (p < 1 || p > totalPages) return;
+  currentPage = p;
+  renderFiltered();
+  document.getElementById('memberList').scrollIntoView({behavior:'smooth', block:'start'});
+};
 
 /* ── 교육생 추가 ── */
 window.addMember = async function() {
