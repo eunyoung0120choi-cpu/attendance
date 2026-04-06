@@ -55,16 +55,24 @@ input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{border-c
 .csv-area{background:#f9fafb;border:1.5px dashed #d1d5db;border-radius:10px;padding:1.1rem;text-align:center;cursor:pointer;transition:.15s;margin-bottom:.85rem}
 .csv-area:hover{border-color:#3b82f6;background:#eff6ff}
 .csv-btns{display:flex;gap:8px}
-/* 필터 탭 */
 .filter-tabs{display:flex;gap:6px;margin-bottom:.85rem}
 .filter-tab{flex:1;height:36px;border-radius:8px;border:1px solid #e5e7eb;background:#f9fafb;color:#6b7280;font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;transition:.15s}
 .filter-tab.active{background:#3b82f6;color:#fff;border-color:#3b82f6}
-/* 명단 */
-.list-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem}
+/* 정렬/일괄삭제 툴바 */
+.list-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;gap:8px}
 .list-count{font-size:13px;color:#6b7280}
+.toolbar-right{display:flex;align-items:center;gap:6px}
+.sort-btn{height:32px;padding:0 .75rem;border-radius:8px;border:1px solid #e5e7eb;background:#fff;color:#374151;font-size:12px;font-family:inherit;cursor:pointer;transition:.15s;white-space:nowrap}
+.sort-btn.active{background:#eff6ff;border-color:#93c5fd;color:#1d4ed8}
+.sort-btn:hover{background:#f3f4f6}
+.bulk-delete-btn{height:32px;padding:0 .75rem;border-radius:8px;border:1px solid #fca5a5;background:#fef2f2;color:#dc2626;font-size:12px;font-family:inherit;cursor:pointer;transition:.15s;white-space:nowrap;display:none}
+.bulk-delete-btn.show{display:block}
+/* 체크박스 */
 .member-list{display:flex;flex-direction:column;gap:8px}
-.member-item{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px}
-.member-info{display:flex;flex-direction:column;gap:2px}
+.member-item{display:flex;align-items:center;gap:10px;padding:.75rem 1rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;transition:.15s}
+.member-item.checked{background:#eff6ff;border-color:#93c5fd}
+.member-check{width:18px;height:18px;cursor:pointer;accent-color:#3b82f6;flex-shrink:0}
+.member-info{display:flex;flex-direction:column;gap:2px;flex:1}
 .member-name{font-size:15px;font-weight:500;color:#111827}
 .member-phone{font-size:12px;color:#6b7280}
 .member-time{font-size:11px;color:#9ca3af;margin-top:1px}
@@ -74,7 +82,6 @@ input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{border-c
 .del-btn-sm{width:28px;height:28px;border:none;background:transparent;cursor:pointer;color:#f87171;font-size:18px;display:flex;align-items:center;justify-content:center;border-radius:6px}
 .del-btn-sm:hover{background:#fee2e2}
 .empty-state{text-align:center;padding:2rem;color:#9ca3af;font-size:14px}
-/* 페이지네이션 */
 .pagination{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:1rem}
 .page-btn{width:36px;height:36px;border-radius:8px;border:1px solid #e5e7eb;background:#fff;color:#374151;font-size:14px;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
 .page-btn:hover{background:#f3f4f6}
@@ -87,6 +94,10 @@ input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{border-c
 .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(60px);background:#1f2937;color:#fff;padding:.65rem 1.25rem;border-radius:10px;font-size:14px;opacity:0;transition:.3s;white-space:nowrap;pointer-events:none;z-index:999}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .divider{border:none;border-top:1px solid #f3f4f6;margin:.85rem 0}
+/* 전체선택 */
+.select-all-row{display:flex;align-items:center;gap:8px;padding:.5rem .25rem;margin-bottom:.25rem}
+.select-all-check{width:18px;height:18px;cursor:pointer;accent-color:#3b82f6}
+.select-all-label{font-size:13px;color:#6b7280;cursor:pointer}
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
@@ -136,7 +147,6 @@ input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{border-c
         </div>
       </div>
 
-      <!-- 통계 (클릭하면 필터) -->
       <div class="stats">
         <div class="stat-card blue" id="statAll" onclick="setFilter('all')">
           <div class="stat-num" id="statTotal">0</div>
@@ -188,21 +198,27 @@ input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{border-c
           </div>
         </div>
 
-        <!-- 필터 탭 -->
         <div class="filter-tabs">
           <button class="filter-tab active" id="tab-all" onclick="setFilter('all')">전체</button>
           <button class="filter-tab" id="tab-attended" onclick="setFilter('attended')">출석</button>
           <button class="filter-tab" id="tab-absent" onclick="setFilter('absent')">미출석</button>
         </div>
 
-        <div class="list-header-row">
+        <div class="list-toolbar">
           <div class="list-count" id="listCount"></div>
+          <div class="toolbar-right">
+            <button class="sort-btn" id="sortBtn" onclick="toggleSort()">가나다순 ↕</button>
+            <button class="bulk-delete-btn" id="bulkDeleteBtn" onclick="bulkDelete()">선택 삭제</button>
+          </div>
+        </div>
+
+        <div class="select-all-row" id="selectAllRow" style="display:none">
+          <input type="checkbox" class="select-all-check" id="selectAllCheck" onchange="toggleSelectAll(this.checked)"/>
+          <label class="select-all-label" for="selectAllCheck" id="selectAllLabel">전체 선택</label>
         </div>
 
         <div class="loader" id="listLoader"><div class="spinner"></div><span>불러오는 중...</span></div>
         <div class="member-list" id="memberList"></div>
-
-        <!-- 페이지네이션 -->
         <div class="pagination" id="pagination"></div>
       </div>
 
@@ -236,6 +252,8 @@ let currentMembers = [];
 let memberUnsub = null;
 let currentFilter = 'all';
 let currentPage = 1;
+let sortAsc = true;
+let checkedIds = new Set();
 
 /* ── 비밀번호 ── */
 window.checkPw = function() {
@@ -287,6 +305,7 @@ window.selectSession = function(id) {
   currentSessionId = id;
   currentFilter = 'all';
   currentPage = 1;
+  checkedIds = new Set();
   const s = sessions.find(x => x.id === id);
   document.getElementById('selectedPanel').style.display = 'block';
   document.getElementById('selectedName').textContent = s.name;
@@ -374,6 +393,7 @@ function updateStats(members) {
 window.setFilter = function(f) {
   currentFilter = f;
   currentPage = 1;
+  checkedIds = new Set();
   setFilterTab(f);
   renderFiltered();
 };
@@ -383,18 +403,34 @@ function setFilterTab(f) {
     document.getElementById('tab-' + x).classList.toggle('active', x === f);
   });
   ['statAll','statAttended','statAbsentCard'].forEach((id, i) => {
-    const f2 = ['all','attended','absent'][i];
-    document.getElementById(id).classList.toggle('selected', f2 === f);
+    document.getElementById(id).classList.toggle('selected', ['all','attended','absent'][i] === f);
+  });
+}
+
+/* ── 정렬 ── */
+window.toggleSort = function() {
+  sortAsc = !sortAsc;
+  currentPage = 1;
+  document.getElementById('sortBtn').textContent = sortAsc ? '가나다순 ↑' : '가나다순 ↓';
+  document.getElementById('sortBtn').classList.add('active');
+  renderFiltered();
+};
+
+function getSorted(members) {
+  return [...members].sort((a, b) => {
+    const cmp = a.name.localeCompare(b.name, 'ko');
+    return sortAsc ? cmp : -cmp;
   });
 }
 
 function getFiltered() {
-  if (currentFilter === 'attended') return currentMembers.filter(m => m.attended);
-  if (currentFilter === 'absent') return currentMembers.filter(m => !m.attended);
-  return currentMembers;
+  let list = currentMembers;
+  if (currentFilter === 'attended') list = list.filter(m => m.attended);
+  if (currentFilter === 'absent') list = list.filter(m => !m.attended);
+  return getSorted(list);
 }
 
-/* ── 렌더링 (페이지네이션 포함) ── */
+/* ── 렌더링 ── */
 function renderFiltered() {
   const filtered = getFiltered();
   const total = filtered.length;
@@ -403,9 +439,19 @@ function renderFiltered() {
   const start = (currentPage - 1) * PAGE_SIZE;
   const paged = filtered.slice(start, start + PAGE_SIZE);
 
-  document.getElementById('listCount').textContent =
-    (currentFilter === 'all' ? '전체' : currentFilter === 'attended' ? '출석' : '미출석') +
-    ' ' + total + '명 · ' + currentPage + ' / ' + totalPages + ' 페이지';
+  const filterLabel = currentFilter === 'all' ? '전체' : currentFilter === 'attended' ? '출석' : '미출석';
+  document.getElementById('listCount').textContent = filterLabel + ' ' + total + '명 · ' + currentPage + ' / ' + totalPages + ' 페이지';
+
+  // 전체선택 행
+  const selectAllRow = document.getElementById('selectAllRow');
+  selectAllRow.style.display = paged.length ? 'flex' : 'none';
+  updateSelectAllState(paged);
+
+  // 일괄삭제 버튼
+  document.getElementById('bulkDeleteBtn').classList.toggle('show', checkedIds.size > 0);
+  if (checkedIds.size > 0) {
+    document.getElementById('bulkDeleteBtn').textContent = '선택 삭제 (' + checkedIds.size + '명)';
+  }
 
   const list = document.getElementById('memberList');
   if (!paged.length) {
@@ -416,7 +462,9 @@ function renderFiltered() {
 
   list.innerHTML = paged.map(m => {
     const time = m.attendedAt ? new Date(m.attendedAt).toLocaleTimeString('ko-KR', {hour:'2-digit',minute:'2-digit'}) : '';
-    return `<div class="member-item">
+    const checked = checkedIds.has(m.id);
+    return `<div class="member-item ${checked ? 'checked' : ''}" id="item-${m.id}">
+      <input type="checkbox" class="member-check" ${checked ? 'checked' : ''} onchange="toggleCheck('${m.id}', this.checked)"/>
       <div class="member-info">
         <div class="member-name">${m.name}</div>
         <div class="member-phone">${m.phone}</div>
@@ -432,12 +480,61 @@ function renderFiltered() {
   renderPagination(totalPages);
 }
 
+function updateSelectAllState(paged) {
+  const check = document.getElementById('selectAllCheck');
+  const label = document.getElementById('selectAllLabel');
+  const pagedIds = paged.map(m => m.id);
+  const allChecked = pagedIds.length > 0 && pagedIds.every(id => checkedIds.has(id));
+  check.checked = allChecked;
+  check.indeterminate = !allChecked && pagedIds.some(id => checkedIds.has(id));
+  label.textContent = allChecked ? '전체 해제' : '전체 선택';
+}
+
+/* ── 체크박스 ── */
+window.toggleCheck = function(id, checked) {
+  if (checked) checkedIds.add(id);
+  else checkedIds.delete(id);
+  const item = document.getElementById('item-' + id);
+  if (item) item.classList.toggle('checked', checked);
+  const filtered = getFiltered();
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const paged = filtered.slice(start, start + PAGE_SIZE);
+  updateSelectAllState(paged);
+  document.getElementById('bulkDeleteBtn').classList.toggle('show', checkedIds.size > 0);
+  if (checkedIds.size > 0) {
+    document.getElementById('bulkDeleteBtn').textContent = '선택 삭제 (' + checkedIds.size + '명)';
+  }
+};
+
+window.toggleSelectAll = function(checked) {
+  const filtered = getFiltered();
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const paged = filtered.slice(start, start + PAGE_SIZE);
+  paged.forEach(m => {
+    if (checked) checkedIds.add(m.id);
+    else checkedIds.delete(m.id);
+  });
+  renderFiltered();
+};
+
+/* ── 일괄 삭제 ── */
+window.bulkDelete = async function() {
+  if (!checkedIds.size) return;
+  if (!confirm(checkedIds.size + '명을 삭제하시겠습니까?')) return;
+  try {
+    const batch = writeBatch(db);
+    checkedIds.forEach(id => batch.delete(doc(db, 'sessions', currentSessionId, 'members', id)));
+    await batch.commit();
+    checkedIds = new Set();
+    showToast(checkedIds.size + '명이 삭제되었습니다');
+  } catch(e) { showToast('오류: ' + e.message); }
+};
+
 function renderPagination(totalPages) {
   const pg = document.getElementById('pagination');
   if (totalPages <= 1) { pg.innerHTML = ''; return; }
-
   let html = `<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
-
   for (let i = 1; i <= totalPages; i++) {
     if (totalPages > 7 && i > 2 && i < totalPages - 1 && Math.abs(i - currentPage) > 1) {
       if (i === 3 || i === totalPages - 2) html += `<span class="page-info">…</span>`;
@@ -445,7 +542,6 @@ function renderPagination(totalPages) {
     }
     html += `<button class="page-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
   }
-
   html += `<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>›</button>`;
   pg.innerHTML = html;
 }
@@ -480,6 +576,7 @@ window.deleteMember = async function(id, name) {
   if (!confirm(name + ' 님을 삭제하시겠습니까?')) return;
   try {
     await deleteDoc(doc(db, 'sessions', currentSessionId, 'members', id));
+    checkedIds.delete(id);
     showToast('삭제되었습니다');
   } catch(e) { showToast('오류: ' + e.message); }
 };
@@ -496,7 +593,7 @@ window.resetAllAttendance = async function() {
   } catch(e) { showToast('오류: ' + e.message); }
 };
 
-/* ── CSV 양식 다운로드 ── */
+/* ── CSV ── */
 window.downloadTemplate = function() {
   const csv = '\uFEFF이름,핸드폰번호\n홍길동,010-1234-5678\n김철수,010-9876-5432';
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -506,7 +603,6 @@ window.downloadTemplate = function() {
   a.click();
 };
 
-/* ── CSV 업로드 ── */
 window.handleCsv = function(input) {
   const file = input.files[0];
   if (!file) return;
@@ -537,12 +633,12 @@ window.handleCsv = function(input) {
   reader.readAsText(file, 'UTF-8');
 };
 
-/* ── 출석 결과 내보내기 ── */
 window.downloadResult = function() {
   if (!currentMembers.length) { showToast('명단이 없습니다'); return; }
   const s = sessions.find(x => x.id === currentSessionId);
+  const sorted = getSorted(currentMembers);
   let csv = '\uFEFF이름,핸드폰번호,출석여부,출석시간\n';
-  currentMembers.forEach(m => {
+  sorted.forEach(m => {
     const time = m.attendedAt ? new Date(m.attendedAt).toLocaleString('ko-KR') : '';
     csv += `${m.name},${m.phone},${m.attended ? '출석' : '미출석'},${time}\n`;
   });
@@ -553,7 +649,6 @@ window.downloadResult = function() {
   a.click();
 };
 
-/* ── 핸드폰 하이픈 ── */
 document.getElementById('newPhone').addEventListener('input', function() {
   let v = this.value.replace(/\D/g, '');
   if (v.length <= 3) this.value = v;
